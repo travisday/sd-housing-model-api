@@ -4,7 +4,7 @@ name: pull data and retrain model
 
 on:
   schedule:
-    - cron: '0 12 * * *' # runs at 12:00 UTC everyday
+    - cron: '*/5 * * * *' # runs at 12:00 UTC everyday
 
 jobs:
   build:
