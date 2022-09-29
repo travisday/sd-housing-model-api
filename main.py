@@ -1,29 +1,40 @@
+import pandas as pd
 from statsforecast.core import StatsForecast
 from statsforecast.models import AutoARIMA
 import uvicorn
 from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+from os.path import exists
+from autots import AutoTS
 
 app = FastAPI()
 
-def train_model(df):
-  autoARIMA = AutoARIMA()
-  model = StatsForecast(df=df, 
-                        models=[autoARIMA],
-                        freq='M', n_jobs=-1)
 
-def get_predictions():
-  preds = model.forecast(12)
-  return preds['AutoARIMA'].values
+def autots_predict():
+  model = AutoTS(forecast_length=12,
+                 frequency='infer',
+                 model_list="superfast",
+                 ensemble='simple')
+
+  if exists("autots_model.csv"):
+    model.import_template("autots_model.csv", method="only")
+
+  prediction = model.predict(fail_on_forecast_nan=True)
+  forecasts_df = prediction.forecast
+
+  return jsonable_encoder(forecasts_df['y'].values.tolist())
 
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+  return {"message": "Hello World"}
 
-@app.get("/get_predictions")
-async def root():
-    return get_predictions()
+
+@app.get("/pred")
+async def predictions():
+  return JSONResponse(content=autots_predict())
 
 
 if __name__ == '__main__':
-  uvicorn.run(app, host="0.0.0.0", port=8000)
+  uvicorn.run(app, host="0.0.0.0", port=8080)
