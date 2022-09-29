@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 
-fred_key = os.environ['fred_key']
+fred_key = os.environ['FRED_KEY']
 fred = Fred(api_key=fred_key)
 
 data = fred.get_series('SDXRSA')
