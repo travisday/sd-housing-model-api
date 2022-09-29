@@ -1,6 +1,4 @@
 import pandas as pd
-from statsforecast.core import StatsForecast
-from statsforecast.models import AutoARIMA
 import uvicorn
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
