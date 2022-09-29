@@ -25,6 +25,8 @@ jobs:
           pip install -r requirements.txt
           
       - name: pull data
+        env: 
+          fred_key: ${{ secrets.FRED_KEY }}
         run: python pull_data.py
         
       - name: re-train
