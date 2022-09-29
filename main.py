@@ -10,7 +10,6 @@ from autots import AutoTS
 
 app = FastAPI()
 
-
 def autots_predict():
   model = AutoTS(forecast_length=12,
                  frequency='infer',
@@ -20,10 +19,16 @@ def autots_predict():
   if exists("autots_model.csv"):
     model.import_template("autots_model.csv", method="only")
 
-  prediction = model.predict(fail_on_forecast_nan=True)
-  forecasts_df = prediction.forecast
+  if exists('data.csv'):
+    df = pd.read_csv('data.csv')
+    df['ds'] = pd.to_datetime(df['ds'])
 
-  return jsonable_encoder(forecasts_df['y'].values.tolist())
+    model = model.fit(df, date_col='ds', value_col='y', id_col=None)
+  
+    prediction = model.predict(fail_on_forecast_nan=True)
+    forecasts_df = prediction.forecast
+
+    return jsonable_encoder(forecasts_df['y'].values.tolist())
 
 
 @app.get("/")

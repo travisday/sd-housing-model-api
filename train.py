@@ -17,7 +17,7 @@ if exists('data.csv'):
   model.export_template(
     'autots_model.csv',
     models="best",
-    n=30,
+    n=1,
     max_per_model_class=6,
     include_results=True,
   )
