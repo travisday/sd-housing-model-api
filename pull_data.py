@@ -2,7 +2,6 @@ from fredapi import Fred
 import pandas as pd
 import os
 
-
 fred_key = os.environ['FRED_KEY']
 fred = Fred(api_key=fred_key)
 
