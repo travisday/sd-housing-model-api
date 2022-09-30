@@ -43,7 +43,7 @@ async def predictions():
 
 @app.post("/refresh")
 async def refresh(req: Request, res: Response):
-  print("repl.deploy" + req.body + req.headers.get("Signature"))
+  print("repl.deploy" + req.body() + req.headers.get("Signature"))
   jsonable_encoder(await getStdinLine())
   await res.setStatus(res.status).end(res.body)
   print("repl.deploy-success")
