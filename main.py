@@ -41,7 +41,7 @@ async def predictions():
   return JSONResponse(content=autots_predict())
 
 
-@app.get("/refresh")
+@app.post("/refresh")
 async def refresh(req: Request, res: Response):
   print("repl.deploy" + req.body + req.headers.get("Signature"))
   jsonable_encoder(await getStdinLine())
