@@ -1,4 +1,12 @@
 [[package]]
+name = "aioconsole"
+version = "0.5.1"
+description = "Asynchronous console and interfaces for asyncio"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "aiohttp"
 version = "3.8.3"
 description = "Async http client/server framework (asyncio)"
@@ -628,9 +636,10 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8.0,<3.9"
-content-hash = "986796afdf69b8013a2dd4f6458470e0caadbe641594786d1df38d8a8b2f1965"
+content-hash = "f4bf629c08ccef73a4c165a6304564f1b2231f412bfd59810c1227be0ba3191b"
 
 [metadata.files]
+aioconsole = []
 aiohttp = []
 aiosignal = []
 anyio = []

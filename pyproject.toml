@@ -14,6 +14,7 @@ fredapi = "^0.5.0"
 pandas = "^1.5.0"
 fastapi = "^0.85.0"
 uvicorn = "^0.18.3"
+aioconsole = "^0.5.1"
 
 [tool.poetry.dev-dependencies]
 debugpy = "^1.6.2"

@@ -6,6 +6,8 @@ from fastapi.responses import JSONResponse
 from os.path import exists
 from autots import AutoTS
 import fileinput
+import json
+from aioconsole import ainput
 
 app = FastAPI()
 
@@ -40,31 +42,6 @@ async def root():
 async def predictions():
   return JSONResponse(content=autots_predict())
 
-
-@app.post("/refresh")
-async def refresh(req: Request, res: Response):
-  print("repl.deploy" + req.body() + req.headers.get("Signature"))
-  jsonable_encoder(await getStdinLine())
-  await res.setStatus(res.status).end(res.body)
-  print("repl.deploy-success")
-
-
-async def getStdinLine():
-  for line in fileinput.input():
-    return line
-
-
-# app.post("/refresh", async (req, res) => {
-#     console.log("repl.deploy" + req.body + req.headers.get("Signature"))
-
-#     const result: {
-#         body: string
-#         status: number
-#     } = JSON.parse((await getStdinLine())!)
-
-#     await res.setStatus(result.status).end(result.body)
-#     console.log("repl.deploy-success")
-# })
 
 if __name__ == '__main__':
   uvicorn.run(app, host="0.0.0.0", port=8080)
