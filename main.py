@@ -1,16 +1,12 @@
 import pandas as pd
 import uvicorn
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from os.path import exists
 from autots import AutoTS
-import fileinput
-import json
-from aioconsole import ainput
 
 app = FastAPI()
-
 
 def autots_predict():
   model = AutoTS(forecast_length=12,
