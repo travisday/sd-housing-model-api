@@ -1,5 +1,3 @@
 pandas
 fredapi
 autots
-uvicorn
-fastapi

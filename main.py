@@ -8,6 +8,7 @@ from autots import AutoTS
 
 app = FastAPI()
 
+
 def autots_predict():
   model = AutoTS(forecast_length=12,
                  frequency='infer',
@@ -37,6 +38,16 @@ async def root():
 @app.get("/pred")
 async def predictions():
   return JSONResponse(content=autots_predict())
+
+
+@app.get("/data")
+async def get_data():
+  df = pd.read_csv('data.csv')
+  df['ds'] = pd.to_datetime(df['ds'])
+  ds = jsonable_encoder(df['ds'].values.tolist())
+  y = jsonable_encoder(df['y'].values.tolist())
+  out = {'ds': ds, 'y': y}
+  return JSONResponse(content=jsonable_encoder(out))
 
 
 if __name__ == '__main__':
