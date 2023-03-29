@@ -15,19 +15,13 @@ def autots_predict():
                  model_list="superfast",
                  ensemble='simple')
 
-  if exists("autots_model.csv"):
-    model.import_template("autots_model.csv", method="only")
+  if exists("model.csv"):
+    model.import_template("model.csv", method="only")
 
-  if exists('data.csv'):
-    df = pd.read_csv('data.csv')
-    df['ds'] = pd.to_datetime(df['ds'])
+    prediction = model.predict()
+    forecast = prediction.forecast
 
-    model = model.fit(df, date_col='ds', value_col='y', id_col=None)
-
-    prediction = model.predict(fail_on_forecast_nan=True)
-    forecasts_df = prediction.forecast
-
-    return jsonable_encoder(forecasts_df['y'].values.tolist())
+    return jsonable_encoder(forecast['y'].values.tolist())
 
 
 @app.get("/")
