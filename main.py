@@ -8,30 +8,38 @@ from autots import AutoTS
 
 app = FastAPI()
 
-
-def autots_predict():
+def train():
   model = AutoTS(forecast_length=12,
-                 frequency='infer',
-                 model_list="superfast",
-                 ensemble='simple')
+               frequency='infer',
+               model_list="superfast",
+               ensemble='simple')
 
-  if exists("model.csv"):
-    model.import_template("model.csv", method="only")
-
+  if exists('data.csv'):
+    df = pd.read_csv('data.csv')
+    df['ds'] = pd.to_datetime(df['ds'])
+    model = model.fit(df, date_col='ds', value_col='y', id_col=None)
+    model.export_template('model.csv', models='best',
+                        n=15, max_per_model_class=3)
     prediction = model.predict()
-    forecast = prediction.forecast
+    preds = prediction.forecast
 
-    return jsonable_encoder(forecast['y'].values.tolist())
-
+    preds = preds.reset_index()
+    preds = preds.rename(columns={"index": "ds"})
+    preds.to_csv('forecast.csv', index=False)
 
 @app.get("/")
 async def root():
-  return {"message": "Hello World"}
+  return "SD Housing Price Predictor"
 
 
 @app.get("/pred")
 async def predictions():
-  return JSONResponse(content=autots_predict())
+  df = pd.read_csv('forecast.csv')
+  df['ds'] = pd.to_datetime(df['ds'])
+  ds = jsonable_encoder(df['ds'].values.tolist())
+  y = jsonable_encoder(df['y'].values.tolist())
+  out = {'ds': ds, 'y': y}
+  return JSONResponse(content=jsonable_encoder(out))
 
 
 @app.get("/data")
@@ -42,6 +50,11 @@ async def get_data():
   y = jsonable_encoder(df['y'].values.tolist())
   out = {'ds': ds, 'y': y}
   return JSONResponse(content=jsonable_encoder(out))
+
+@app.get("/train")
+async def root():
+  train()
+  return "Trained!"
 
 
 if __name__ == '__main__':
